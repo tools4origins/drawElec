@@ -107,11 +107,16 @@ DrawElec.prototype.initItems = function () {
 		}
 	};
 
-	this.circuit.addChild(resistor.dragAndDrop(dragAndDropOptions));
+
+	var resistors = [ resistor, resistor.clone(), resistor.clone() ];
+	for (var i = 0; i < resistors.length; i++) {
+		this.circuit.addChild(resistors[i]);
+		resistors[i].dragAndDrop(dragAndDropOptions);
+	}
 };
 
 DrawElec.positionOnGrid = function (position) {
-	return Math.round(position/20)*20 - 7;
+	return Math.round(position/20)*20 - 1;
 };
 
 DrawElec.prototype.initGrid = function () {
