@@ -1,11 +1,9 @@
 var DrawElec = function (containerSelector) {
-	console.log("triggered");
 	this.container = document.querySelector(containerSelector);
 	this.init();
 };
 
 DrawElec.prototype.init = function () {
-	console.log("triggered");
 	this.initVariables();
 	this.initGrid();
 	this.initCircuit();
@@ -17,7 +15,6 @@ DrawElec.prototype.initVariables = function() {
 };
 
 DrawElec.prototype.initCircuit = function() {
-	console.log("triggered");
 	this.circuitEl = document.createElement("canvas");
 	this.circuitEl.setAttribute('class', 'drawElec-circuit');
 	this.circuitEl.width = window.innerWidth-22;
@@ -30,8 +27,6 @@ DrawElec.prototype.initCircuit = function() {
 };
 
 DrawElec.prototype.initItems = function() {
-	console.log("triggered");
-
 	var pin = this.circuit.display.line({
 		start: { x: 0, y: 0 },
 		end: { x: 0, y: 0 }, 
@@ -121,7 +116,6 @@ DrawElec.positionOnGrid = function (position) {
 };
 
 DrawElec.prototype.initGrid = function () {
-	console.log("triggered");
 	this.gridEl = document.createElement("canvas");
 	this.gridEl.setAttribute('class', 'drawElec-grid');
 	this.gridEl.width = window.innerWidth-22;
