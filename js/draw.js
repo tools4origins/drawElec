@@ -10,15 +10,15 @@ DrawElec.prototype.init = function () {
 	this.initItems();
 }
 
-DrawElec.prototype.initVariables = function() {
+DrawElec.prototype.initVariables = function () {
 	this.baseUnit = 20;
 };
 
-DrawElec.prototype.initCircuit = function() {
+DrawElec.prototype.initCircuit = function () {
 	this.circuitEl = document.createElement("canvas");
 	this.circuitEl.setAttribute('class', 'drawElec-circuit');
-	this.circuitEl.width = window.innerWidth-22;
-	this.circuitEl.height = window.innerHeight-60;
+	this.circuitEl.width = window.innerWidth - 22;
+	this.circuitEl.height = window.innerHeight - 60;
 	this.container.appendChild(this.circuitEl);
 
 	this.circuit = oCanvas.create({
@@ -26,13 +26,13 @@ DrawElec.prototype.initCircuit = function() {
 	});
 };
 
-DrawElec.prototype.initItems = function() {
+DrawElec.prototype.initItems = function () {
 	var pin = this.circuit.display.line({
 		start: { x: 0, y: 0 },
 		end: { x: 0, y: 0 }, 
 		stroke: "1px #079",
 		cap: "round"
-	}), pinIndicators=[];
+	}), pinIndicators = [];
 
 	pinIndicators[0] = this.circuit.display.ellipse({
 		radius: 5,
@@ -75,7 +75,7 @@ DrawElec.prototype.initItems = function() {
 			y: componentModel.height/2,
 		},
 		end: {
-			x: componentModel.width+20,
+			x: componentModel.width + 20,
 			y: componentModel.height/2,
 		}
 	}));
@@ -88,11 +88,11 @@ DrawElec.prototype.initItems = function() {
 		},
 		move: function () {
 			pinIndicators[0].moveTo(
-				DrawElec.positionOnGrid(this.children[0].abs_x-10),
+				DrawElec.positionOnGrid(this.children[0].abs_x - 10),
 				DrawElec.positionOnGrid(this.children[0].abs_y)
 			);
 			pinIndicators[1].moveTo(
-				DrawElec.positionOnGrid(this.children[1].abs_x+10),
+				DrawElec.positionOnGrid(this.children[1].abs_x + 10),
 				DrawElec.positionOnGrid(this.children[1].abs_y)
 			);
 		},
@@ -100,7 +100,6 @@ DrawElec.prototype.initItems = function() {
 			for (var i = pinIndicators.length - 1; i >= 0; i--) {
 				pinIndicators[i].fadeOut(150);
 			};
-			console.log(this);
 			this.moveTo(
 				(pinIndicators[0].abs_x + pinIndicators[1].abs_x) / 2 - 20,
 				(pinIndicators[0].abs_y + pinIndicators[1].abs_y) / 2 - componentModel.height/2
@@ -118,8 +117,8 @@ DrawElec.positionOnGrid = function (position) {
 DrawElec.prototype.initGrid = function () {
 	this.gridEl = document.createElement("canvas");
 	this.gridEl.setAttribute('class', 'drawElec-grid');
-	this.gridEl.width = window.innerWidth-22;
-	this.gridEl.height = window.innerHeight-60;
+	this.gridEl.width = window.innerWidth - 22;
+	this.gridEl.height = window.innerHeight - 60;
 	this.container.appendChild(this.gridEl);
 	this.grid = oCanvas.create({
 		canvas: this.gridEl
