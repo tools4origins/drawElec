@@ -2277,7 +2277,6 @@
 			
 			// Method for setting the background
 			set: function (value) {
-				console.log(value);
 				var _this = this;
 				if (typeof value !== "string") {
 					value = "";
