@@ -131,5 +131,5 @@ DrawElec.prototype.initGrid = function () {
 		canvas: this.gridEl
 	});
 
-	this.grid.background.set("image(img/test.png)")
+	this.grid.background.set("image(img/background.png)")
 };
