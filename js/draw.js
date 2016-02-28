@@ -135,7 +135,6 @@ DrawElec.prototype.initGrid = function () {
   this.grid = oCanvas.create({
     canvas: this.gridEl
   });
-  // this.grid.background.set("image(img/background.png)");
 
 
   var background = this.grid.background;
