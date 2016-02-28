@@ -69,24 +69,25 @@ DrawElec.prototype.drawResistor = function (x, y) {
     fill: "#3ac",
     stroke: "1px #079"
   });
+  console.log(resistor);
   resistor.addChild(this.components.pin.clone({
     start: {
       x: -this.pinSize,
-      y: this.componentSize.height/2
+      y: resistor.height/2
     },
     end: {
       x: 0,
-      y: this.componentSize.height/2
+      y: resistor.height/2
     }
   }));
   resistor.addChild(this.components.pin.clone({
     start: {
-      x: this.componentSize.width,
-      y: this.componentSize.height/2
+      x: resistor.width,
+      y: resistor.height/2
     },
     end: {
-      x: this.componentSize.width + this.pinSize,
-      y: this.componentSize.height/2
+      x: resistor.width + this.pinSize,
+      y: resistor.height/2
     }
   }));
 
