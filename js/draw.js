@@ -56,7 +56,7 @@ DrawElec.prototype.initItems = function () {
   }
 
   this.drawResistor(4, 3);
-  this.drawResistor(4, 4);
+  this.drawCapacitor(4, 4);
   this.drawResistor(4, 5);
 };
 
@@ -69,7 +69,6 @@ DrawElec.prototype.drawResistor = function (x, y) {
     fill: "#3ac",
     stroke: "1px #079"
   });
-  console.log(resistor);
   resistor.addChild(this.components.pin.clone({
     start: {
       x: -this.pinSize,
@@ -121,6 +120,83 @@ DrawElec.prototype.drawResistor = function (x, y) {
 
   this.circuit.addChild(resistor);
   resistor.dragAndDrop(dragAndDropOptions);
+};
+
+DrawElec.prototype.drawCapacitor = function (x, y) {
+  var capacitor = this.circuit.display.line({
+    start: {
+      x: this.baseUnit * (x + 0.8),
+      y: this.baseUnit * y - this.componentSize.height * 2/3
+    }, end: {
+      x: this.baseUnit * (x + 0.8),
+      y: this.baseUnit * y + this.componentSize.height * 2/3
+    },
+    fill: "#3ac",
+    stroke: "1px #079"
+  });
+
+  capacitor.addChild(this.components.pin.clone({
+    start: {
+      x: -this.pinSize - 0.8*this.baseUnit,
+      y: capacitor.height/2
+    },
+    end: {
+      x: 0,
+      y: capacitor.height/2
+    }
+  }));
+  capacitor.addChild(this.components.pin.clone({
+    start: {
+      x: 0.4*this.baseUnit,
+      y: capacitor.height/2
+    },
+    end: {
+      x: 1.2*this.baseUnit + this.pinSize,
+      y: capacitor.height/2
+    }
+  }));
+  capacitor.addChild(this.circuit.display.line({
+    start: {
+      x: 0.4*this.baseUnit,
+      y: -this.componentSize.height * 2/3
+    }, end: {
+      x: 0.4*this.baseUnit,
+      y: this.componentSize.height * 2/3
+    },
+    fill: "#3ac",
+    stroke: "1px #079"
+  }));
+
+  var drawElec = this;
+  var dragAndDropOptions = {
+    start: function () {
+      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
+        drawElec.pinIndicators[i].fadeIn(700);
+      }
+    },
+    move: function () {
+      drawElec.pinIndicators[0].moveTo(
+        drawElec.positionOnGrid(this.children[0].abs_x - drawElec.pinSize/2),
+        drawElec.positionOnGrid(this.children[0].abs_y)
+      );
+      drawElec.pinIndicators[1].moveTo(
+        drawElec.positionOnGrid(this.children[1].abs_x + drawElec.pinSize/2),
+        drawElec.positionOnGrid(this.children[1].abs_y)
+      );
+    },
+    end: function () {
+      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
+        drawElec.pinIndicators[i].fadeOut(150);
+      }
+      this.moveTo(
+        (drawElec.pinIndicators[0].abs_x + drawElec.pinIndicators[1].abs_x) / 2 - drawElec.pinSize,
+        (drawElec.pinIndicators[0].abs_y + drawElec.pinIndicators[1].abs_y) / 2 - drawElec.componentSize.height/2
+      );
+    }
+  };
+
+  this.circuit.addChild(capacitor);
+  capacitor.dragAndDrop(dragAndDropOptions);
 };
 
 DrawElec.prototype.positionOnGrid = function (position) {
