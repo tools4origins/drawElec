@@ -15,7 +15,7 @@ DrawElec.prototype.initSizes = function () {
   this.baseUnit = 20;
   this.pinSize = this.baseUnit;
   this.componentSize = {
-    width: 2*this.baseUnit,
+    width: 3*this.baseUnit,
     height: 0.75*this.baseUnit
   };
 };
@@ -61,34 +61,50 @@ DrawElec.prototype.initItems = function () {
 };
 
 DrawElec.prototype.drawResistor = function (x, y) {
-  var resistor = this.circuit.display.rectangle({
-    x: this.baseUnit * x,
-    y: this.baseUnit * y - this.componentSize.height/2,
-    width: this.componentSize.width,
-    height: this.componentSize.height,
-    fill: "#3ac",
-    stroke: "1px #079"
+  var resistor = this.createItem({
+    box: {
+      x: x * this.baseUnit,
+      y: y*this.baseUnit - this.componentSize.height/2,
+      width: this.componentSize.width,
+      height: this.componentSize.height
+    },
+    elements: [{
+      // resistor itself
+      type: "rectangle",
+      params: {
+        x: 0.25 * this.componentSize.width,
+        y: 0.1 * this.componentSize.height,
+        width: 0.5 * this.componentSize.width,
+        height: 0.8 * this.componentSize.height
+      }
+    }, {
+      // first pin
+      type: "line",
+      params: {
+        start: {
+          x: 0,
+          y: this.componentSize.height / 2
+        },
+        end: {
+          x: this.componentSize.width * 0.25,
+          y: this.componentSize.height / 2
+        }
+      }
+    }, {
+      // second pin
+      type: "line",
+      params: {
+        start: {
+          x: this.componentSize.width * 0.75,
+          y: this.componentSize.height / 2
+        },
+        end: {
+          x: this.componentSize.width,
+          y: this.componentSize.height / 2
+        }
+      }
+    }]
   });
-  resistor.addChild(this.components.pin.clone({
-    start: {
-      x: -this.pinSize,
-      y: resistor.height/2
-    },
-    end: {
-      x: 0,
-      y: resistor.height/2
-    }
-  }));
-  resistor.addChild(this.components.pin.clone({
-    start: {
-      x: resistor.width,
-      y: resistor.height/2
-    },
-    end: {
-      x: resistor.width + this.pinSize,
-      y: resistor.height/2
-    }
-  }));
 
   var drawElec = this;
   var dragAndDropOptions = {
@@ -123,49 +139,65 @@ DrawElec.prototype.drawResistor = function (x, y) {
 };
 
 DrawElec.prototype.drawCapacitor = function (x, y) {
-  var capacitor = this.circuit.display.line({
-    start: {
-      x: this.baseUnit * (x + 0.8),
-      y: this.baseUnit * y - this.componentSize.height * 2/3
-    }, end: {
-      x: this.baseUnit * (x + 0.8),
-      y: this.baseUnit * y + this.componentSize.height * 2/3
+  var capacitor = this.createItem({
+    box: {
+      x: x * this.baseUnit,
+      y: y*this.baseUnit - this.componentSize.height/2,
+      width: this.componentSize.width,
+      height: this.componentSize.height
     },
-    fill: "#3ac",
-    stroke: "1px #079"
+    elements: [{
+      // first plate
+      type: "line",
+      params: {
+        start: {
+          x: this.componentSize.width * 0.45,
+          y: - this.componentSize.height * (1/5)
+        }, end: {
+          x: this.componentSize.width * 0.45,
+          y: this.componentSize.height * (6/5)
+        }
+      }
+    }, {
+      // second plate
+      type: "line",
+      params: {
+        start: {
+          x: this.componentSize.width * 0.55,
+          y: - this.componentSize.height * (1/5)
+        }, end: {
+          x: this.componentSize.width * 0.55,
+          y: this.componentSize.height * (6/5)
+        }
+      }
+    }, {
+      // first pin
+      type: "line",
+      params: {
+        start: {
+          x: 0,
+          y: this.componentSize.height / 2
+        },
+        end: {
+          x: this.componentSize.width * 0.45,
+          y: this.componentSize.height / 2
+        }
+      }
+    }, {
+      // second pin
+      type: "line",
+      params: {
+        start: {
+          x: this.componentSize.width * 0.55,
+          y: this.componentSize.height / 2
+        },
+        end: {
+          x: this.componentSize.width,
+          y: this.componentSize.height / 2
+        }
+      }
+    }]
   });
-
-  capacitor.addChild(this.components.pin.clone({
-    start: {
-      x: -this.pinSize - 0.8*this.baseUnit,
-      y: capacitor.height/2
-    },
-    end: {
-      x: 0,
-      y: capacitor.height/2
-    }
-  }));
-  capacitor.addChild(this.components.pin.clone({
-    start: {
-      x: 0.4*this.baseUnit,
-      y: capacitor.height/2
-    },
-    end: {
-      x: 1.2*this.baseUnit + this.pinSize,
-      y: capacitor.height/2
-    }
-  }));
-  capacitor.addChild(this.circuit.display.line({
-    start: {
-      x: 0.4*this.baseUnit,
-      y: -this.componentSize.height * 2/3
-    }, end: {
-      x: 0.4*this.baseUnit,
-      y: this.componentSize.height * 2/3
-    },
-    fill: "#3ac",
-    stroke: "1px #079"
-  }));
 
   var drawElec = this;
   var dragAndDropOptions = {
@@ -197,6 +229,32 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
 
   this.circuit.addChild(capacitor);
   capacitor.dragAndDrop(dragAndDropOptions);
+};
+
+DrawElec.prototype.createElement = function (element) {
+  var params = element.params;
+  if (element.params==undefined) {
+    console.error("params empty in", element);
+  }
+  params.fill = params.fill || "#3ac";
+  params.stroke = params.stroke || "1px #079";
+
+  return this.circuit.display[element.type](params);
+};
+
+DrawElec.prototype.createItem = function(description) {
+  description.box.fill = description.box.fill || "transparent";
+  description.box.stroke = description.box.stroke || "transparent";
+  var layer = this.createElement({
+    type: "rectangle",
+    params: description.box
+  });
+
+  for (var element in description.elements) {
+    layer.addChild(this.createElement(description.elements[element]));
+  }
+
+  return layer;
 };
 
 DrawElec.prototype.positionOnGrid = function (position) {
