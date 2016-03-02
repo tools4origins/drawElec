@@ -61,21 +61,22 @@ DrawElec.prototype.initItems = function () {
 };
 
 DrawElec.prototype.drawResistor = function (x, y) {
+  var box = {
+    x: x*this.baseUnit,
+    y: y*this.baseUnit - this.componentSize.height/2,
+    width: this.componentSize.width,
+    height: this.componentSize.height
+  };
   var resistor = this.createItem({
-    box: {
-      x: x * this.baseUnit,
-      y: y*this.baseUnit - this.componentSize.height/2,
-      width: this.componentSize.width,
-      height: this.componentSize.height
-    },
+    box: box,
     elements: [{
       // resistor itself
       type: "rectangle",
       params: {
-        x: 0.25 * this.componentSize.width,
-        y: 0.1 * this.componentSize.height,
-        width: 0.5 * this.componentSize.width,
-        height: 0.8 * this.componentSize.height
+        x: 0.25 * box.width,
+        y: 0.1 * box.height,
+        width: 0.5 * box.width,
+        height: 0.8 * box.height
       }
     }, {
       // first pin
@@ -83,11 +84,11 @@ DrawElec.prototype.drawResistor = function (x, y) {
       params: {
         start: {
           x: 0,
-          y: this.componentSize.height / 2
+          y: 0.5 * box.height
         },
         end: {
-          x: this.componentSize.width * 0.25,
-          y: this.componentSize.height / 2
+          x: 0.25 * box.width,
+          y: 0.5 * box.height
         }
       }
     }, {
@@ -95,12 +96,12 @@ DrawElec.prototype.drawResistor = function (x, y) {
       type: "line",
       params: {
         start: {
-          x: this.componentSize.width * 0.75,
-          y: this.componentSize.height / 2
+          x: 0.75 * box.width,
+          y: 0.5 * box.height
         },
         end: {
-          x: this.componentSize.width,
-          y: this.componentSize.height / 2
+          x: box.width,
+          y: 0.5 * box.height
         }
       }
     }]
@@ -139,23 +140,24 @@ DrawElec.prototype.drawResistor = function (x, y) {
 };
 
 DrawElec.prototype.drawCapacitor = function (x, y) {
+  var box = {
+    x: x * this.baseUnit,
+    y: y * this.baseUnit - this.componentSize.height/2,
+    width: this.componentSize.width,
+    height: this.componentSize.height
+  };
   var capacitor = this.createItem({
-    box: {
-      x: x * this.baseUnit,
-      y: y*this.baseUnit - this.componentSize.height/2,
-      width: this.componentSize.width,
-      height: this.componentSize.height
-    },
+    box: box,
     elements: [{
       // first plate
       type: "line",
       params: {
         start: {
-          x: this.componentSize.width * 0.45,
-          y: - this.componentSize.height * (1/5)
+          x: 0.45 * box.width,
+          y: - 0.2 * box.height
         }, end: {
-          x: this.componentSize.width * 0.45,
-          y: this.componentSize.height * (6/5)
+          x: 0.45 * box.width,
+          y: 1.2 * box.height
         }
       }
     }, {
@@ -163,11 +165,11 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
       type: "line",
       params: {
         start: {
-          x: this.componentSize.width * 0.55,
-          y: - this.componentSize.height * (1/5)
+          x: 0.55 * box.width,
+          y: - 0.2 * box.height
         }, end: {
-          x: this.componentSize.width * 0.55,
-          y: this.componentSize.height * (6/5)
+          x: 0.55 * box.width,
+          y: 1.2 * box.height
         }
       }
     }, {
@@ -176,11 +178,11 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
       params: {
         start: {
           x: 0,
-          y: this.componentSize.height / 2
+          y: 0.5 * box.height
         },
         end: {
-          x: this.componentSize.width * 0.45,
-          y: this.componentSize.height / 2
+          x: 0.45 * box.width,
+          y: 0.5 * box.height
         }
       }
     }, {
@@ -188,12 +190,12 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
       type: "line",
       params: {
         start: {
-          x: this.componentSize.width * 0.55,
-          y: this.componentSize.height / 2
+          x: 0.55 * box.width,
+          y: 0.5 * box.height
         },
         end: {
-          x: this.componentSize.width,
-          y: this.componentSize.height / 2
+          x: box.width,
+          y: 0.5 * box.height
         }
       }
     }]
