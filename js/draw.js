@@ -69,74 +69,101 @@ DrawElec.prototype.drawResistor = function (x, y) {
   };
   var resistor = this.createItem({
     box: box,
-    elements: [{
-      // resistor itself
-      type: "rectangle",
-      params: {
-        x: 0.25 * box.width,
-        y: 0.1 * box.height,
-        width: 0.5 * box.width,
-        height: 0.8 * box.height
-      }
-    }, {
-      // first pin
-      type: "line",
-      params: {
-        start: {
-          x: 0,
-          y: 0.5 * box.height
-        },
-        end: {
+    elements: [
+      {
+        // resistor itself
+        type: "rectangle",
+        params: {
           x: 0.25 * box.width,
-          y: 0.5 * box.height
+          y: 0.1 * box.height,
+          width: 0.5 * box.width,
+          height: 0.8 * box.height
+        }
+      }, {
+        // first pin
+        type: "line",
+        params: {
+          start: {
+            x: 0,
+            y: 0.5 * box.height
+          },
+          end: {
+            x: 0.25 * box.width,
+            y: 0.5 * box.height
+          }
+        }
+      }, {
+        // second pin
+        type: "line",
+        params: {
+          start: {
+            x: 0.75 * box.width,
+            y: 0.5 * box.height
+          },
+          end: {
+            x: box.width,
+            y: 0.5 * box.height
+          }
         }
       }
-    }, {
-      // second pin
-      type: "line",
-      params: {
-        start: {
-          x: 0.75 * box.width,
-          y: 0.5 * box.height
-        },
-        end: {
-          x: box.width,
-          y: 0.5 * box.height
-        }
+    ],
+    plugs: [
+      {
+        x: box.width,
+        y: 0.5 * box.height
+      }, {
+        x: 0,
+        y: 0.5 * box.height
       }
-    }]
+    ]
   });
 
+  this.addElementToCircuit(resistor);
+};
+
+DrawElec.prototype.indicatePlugsOfElement = function (element) {
+  for (var i in element.desc.plugs) {
+    if (this.pinIndicators.length -1 < i) {
+      this.addIndicator();
+    }
+    this.pinIndicators[i].fadeIn(700);
+    this.pinIndicators[i].moveTo(
+      this.positionOnGrid(element.abs_x + element.desc.plugs[i].x),
+      this.positionOnGrid(element.abs_y + element.desc.plugs[i].y)
+    );
+  }
+};
+
+DrawElec.prototype.moveElementToIndicators = function (element) {
+  element.moveTo(
+    this.pinIndicators[0].abs_x - element.desc.plugs[0].x,
+    this.pinIndicators[0].abs_y - element.desc.plugs[0].y
+  );
+};
+
+DrawElec.prototype.hideIndicators = function () {
+  for (var i = this.pinIndicators.length - 1; i >= 0; i--) {
+    this.pinIndicators[i].fadeOut(150);
+  }
+};
+
+DrawElec.prototype.addElementToCircuit = function (element) {
   var drawElec = this;
   var dragAndDropOptions = {
     start: function () {
-      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
-        drawElec.pinIndicators[i].fadeIn(700);
-      }
+      drawElec.indicatePlugsOfElement(element);
     },
     move: function () {
-      drawElec.pinIndicators[0].moveTo(
-        drawElec.positionOnGrid(this.children[0].abs_x - drawElec.pinSize/2),
-        drawElec.positionOnGrid(this.children[0].abs_y)
-      );
-      drawElec.pinIndicators[1].moveTo(
-        drawElec.positionOnGrid(this.children[1].abs_x + drawElec.pinSize/2),
-        drawElec.positionOnGrid(this.children[1].abs_y)
-      );
+      drawElec.indicatePlugsOfElement(element);
     },
     end: function () {
-      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
-        drawElec.pinIndicators[i].fadeOut(150);
-      }
-      this.moveTo(
-        (drawElec.pinIndicators[0].abs_x + drawElec.pinIndicators[1].abs_x) / 2 - drawElec.pinSize,
-        (drawElec.pinIndicators[0].abs_y + drawElec.pinIndicators[1].abs_y) / 2 - drawElec.componentSize.height/2
-      );
+      drawElec.moveElementToIndicators(element);
+      drawElec.hideIndicators(element);
     }
   };
 
-  this.circuit.addChild(resistor);
-  resistor.dragAndDrop(dragAndDropOptions);
+  this.circuit.addChild(element);
+  element.dragAndDrop(dragAndDropOptions);
 };
 
 DrawElec.prototype.drawCapacitor = function (x, y) {
@@ -198,39 +225,19 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
           y: 0.5 * box.height
         }
       }
-    }]
+    }],
+    plugs: [
+      {
+        x: box.width,
+        y: 0.5 * box.height
+      }, {
+        x: 0,
+        y: 0.5 * box.height
+      }
+    ]
   });
 
-  var drawElec = this;
-  var dragAndDropOptions = {
-    start: function () {
-      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
-        drawElec.pinIndicators[i].fadeIn(700);
-      }
-    },
-    move: function () {
-      drawElec.pinIndicators[0].moveTo(
-        drawElec.positionOnGrid(this.children[0].abs_x - drawElec.pinSize/2),
-        drawElec.positionOnGrid(this.children[0].abs_y)
-      );
-      drawElec.pinIndicators[1].moveTo(
-        drawElec.positionOnGrid(this.children[1].abs_x + drawElec.pinSize/2),
-        drawElec.positionOnGrid(this.children[1].abs_y)
-      );
-    },
-    end: function () {
-      for (var i = drawElec.pinIndicators.length - 1; i >= 0; i--) {
-        drawElec.pinIndicators[i].fadeOut(150);
-      }
-      this.moveTo(
-        (drawElec.pinIndicators[0].abs_x + drawElec.pinIndicators[1].abs_x) / 2 - drawElec.pinSize,
-        (drawElec.pinIndicators[0].abs_y + drawElec.pinIndicators[1].abs_y) / 2 - drawElec.componentSize.height/2
-      );
-    }
-  };
-
-  this.circuit.addChild(capacitor);
-  capacitor.dragAndDrop(dragAndDropOptions);
+  this.addElementToCircuit(capacitor);
 };
 
 DrawElec.prototype.createElement = function (element) {
@@ -255,6 +262,8 @@ DrawElec.prototype.createItem = function(description) {
   for (var element in description.elements) {
     layer.addChild(this.createElement(description.elements[element]));
   }
+
+  layer.desc = description;
 
   return layer;
 };
