@@ -13,7 +13,6 @@ DrawElec.prototype.init = function () {
 
 DrawElec.prototype.initSizes = function () {
   this.baseUnit = 20;
-  this.pinSize = this.baseUnit;
   this.componentSize = {
     width: 3*this.baseUnit,
     height: 0.75*this.baseUnit
@@ -34,30 +33,23 @@ DrawElec.prototype.initCircuit = function () {
 
 DrawElec.prototype.initItems = function () {
   this.components = [];
-  this.components.pin = this.circuit.display.line({
-    start: { x: 0, y: 0 },
-    end: { x: 0, y: 0 },
-    stroke: "1px #079",
-    cap: "round"
-  });
-
   this.pinIndicators = [];
-  this.pinIndicators[0] = this.circuit.display.ellipse({
+
+  this.drawResistor(4, 3);
+  this.drawCapacitor(4, 4);
+  this.drawResistor(4, 5);
+};
+
+DrawElec.prototype.addIndicator = function () {
+  var indicator = this.circuit.display.ellipse({
     radius: 5,
     x: 13,
     y: 13,
     fill: "rgba(255,0,0,0.6)",
     opacity: 0
   });
-  this.pinIndicators.push(this.pinIndicators[0].clone());
-
-  for (var i = this.pinIndicators.length - 1; i >= 0; i--) {
-    this.circuit.addChild(this.pinIndicators[i]);
-  }
-
-  this.drawResistor(4, 3);
-  this.drawCapacitor(4, 4);
-  this.drawResistor(4, 5);
+  var numberOfIndicators = this.pinIndicators.push(indicator);
+  this.circuit.addChild(this.pinIndicators[numberOfIndicators-1]);
 };
 
 DrawElec.prototype.drawResistor = function (x, y) {
@@ -142,8 +134,10 @@ DrawElec.prototype.moveElementToIndicators = function (element) {
 };
 
 DrawElec.prototype.hideIndicators = function () {
+  console.log("end",this.pinIndicators);
   for (var i = this.pinIndicators.length - 1; i >= 0; i--) {
-    this.pinIndicators[i].fadeOut(150);
+    console.log("@todo:fix");
+    this.pinIndicators[i].fadeOut("normal", "ease-in-out-cubic", console.log);
   }
 };
 
@@ -158,7 +152,7 @@ DrawElec.prototype.addElementToCircuit = function (element) {
     },
     end: function () {
       drawElec.moveElementToIndicators(element);
-      drawElec.hideIndicators(element);
+      drawElec.hideIndicators();
     }
   };
 
