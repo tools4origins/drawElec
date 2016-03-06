@@ -32,7 +32,6 @@ DrawElec.prototype.initCircuit = function () {
 };
 
 DrawElec.prototype.initItems = function () {
-  this.components = [];
   this.pinIndicators = [];
 
   this.drawResistor(4, 3);
@@ -236,9 +235,6 @@ DrawElec.prototype.drawCapacitor = function (x, y) {
 
 DrawElec.prototype.createElement = function (element) {
   var params = element.params;
-  if (element.params==undefined) {
-    console.error("params empty in", element);
-  }
   params.fill = params.fill || "#3ac";
   params.stroke = params.stroke || "1px #079";
 
