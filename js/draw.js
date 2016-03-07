@@ -1,8 +1,7 @@
-(function (oCanvas, CircuitStore) {
+(function (oCanvas) {
   var DrawElec = function (containerSelector) {
     this.container = document.querySelector(containerSelector);
     this.init();
-    this.storage = new CircuitStore();
   };
 
   DrawElec.prototype.init = function () {
