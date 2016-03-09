@@ -1,8 +1,8 @@
-(function (oCanvas) {
-  var DrawElec = function (containerSelector) {
-    this.container = document.querySelector(containerSelector);
-    this.init();
-  };
+(function (window, oCanvas) {
+    var DrawElec = function (containerSelector) {
+      this.container = document.querySelector(containerSelector);
+      this.init();
+    };
 
   DrawElec.prototype.init = function () {
     this.initSizes();
@@ -13,15 +13,12 @@
 
   DrawElec.prototype.initSizes = function () {
     this.baseUnit = 20;
-    this.componentSize = {
-      width: 3 * this.baseUnit,
-      height: 0.75 * this.baseUnit
-    };
+    this.components = (new window.BasicComponents(this.baseUnit)).get();
   };
 
   DrawElec.prototype.initCircuit = function () {
     this.circuitEl = document.createElement("canvas");
-    this.circuitEl.setAttribute('class', 'drawElec-circuit');
+    this.circuitEl.setAttribute("class", "drawElec-circuit");
     this.circuitEl.width = window.innerWidth - 22;
     this.circuitEl.height = window.innerHeight - 60;
     this.container.appendChild(this.circuitEl);
@@ -34,9 +31,9 @@
   DrawElec.prototype.initItems = function () {
     this.pinIndicators = [];
 
-    this.drawResistor(4, 3);
-    this.drawCapacitor(4, 4);
-    this.drawResistor(4, 5);
+    this.draw("resistor", 4, 3);
+    this.draw("capacitor", 4, 4);
+    this.draw("resistor", 4, 5);
   };
 
   DrawElec.prototype.addIndicator = function () {
@@ -50,64 +47,11 @@
     this.circuit.addChild(this.pinIndicators[newNumberOfIndicators - 1]);
   };
 
-  DrawElec.prototype.drawResistor = function (x, y) {
-    var box = {
-      x: x * this.baseUnit,
-      y: y * this.baseUnit - this.componentSize.height / 2,
-      width: this.componentSize.width,
-      height: this.componentSize.height
-    }, resistor = this.createItem({
-      box: box,
-      elements: [
-        {
-          // resistor itself
-          type: "rectangle",
-          params: {
-            x: 0.25 * box.width,
-            y: 0.1 * box.height,
-            width: 0.5 * box.width,
-            height: 0.8 * box.height
-          }
-        }, {
-          // first pin
-          type: "line",
-          params: {
-            start: {
-              x: 0,
-              y: 0.5 * box.height
-            },
-            end: {
-              x: 0.25 * box.width,
-              y: 0.5 * box.height
-            }
-          }
-        }, {
-          // second pin
-          type: "line",
-          params: {
-            start: {
-              x: 0.75 * box.width,
-              y: 0.5 * box.height
-            },
-            end: {
-              x: box.width,
-              y: 0.5 * box.height
-            }
-          }
-        }
-      ],
-      plugs: [
-        {
-          x: box.width,
-          y: 0.5 * box.height
-        }, {
-          x: 0,
-          y: 0.5 * box.height
-        }
-      ]
-    });
-
-    this.addElementToCircuit(resistor);
+  DrawElec.prototype.draw = function (componentType, x, y) {
+    var componentFactory = this.components[componentType],
+      componentBox = componentFactory.box(x, y),
+      component = this.createItem(componentFactory.item(componentBox));
+    this.addElementToCircuit(component);
   };
 
   DrawElec.prototype.indicatePlugsOfElement = function (element) {
@@ -134,7 +78,7 @@
   DrawElec.prototype.hideIndicators = function () {
     var i;
     for (i = this.pinIndicators.length - 1; i >= 0; i--) {
-      this.pinIndicators[i].fadeOut("normal", "ease-in-out-cubic", console.log);
+      this.pinIndicators[i].fadeOut("normal", "ease-in-out-cubic");
     }
   };
 
@@ -149,88 +93,11 @@
         },
         end: function () {
           drawElec.moveElementToIndicators(element);
-          drawElec.hideIndicators();
         }
       };
 
     this.circuit.addChild(element);
     element.dragAndDrop(dragAndDropOptions);
-  };
-
-  DrawElec.prototype.drawCapacitor = function (x, y) {
-    var box = {
-        x: x * this.baseUnit,
-        y: y * this.baseUnit - this.componentSize.height / 2,
-        width: this.componentSize.width,
-        height: this.componentSize.height
-      },
-      capacitor = this.createItem({
-        box: box,
-        elements: [{
-          // first plate
-          type: "line",
-          params: {
-            start: {
-              x: 0.45 * box.width,
-              y: -0.2 * box.height
-            },
-            end: {
-              x: 0.45 * box.width,
-              y: 1.2 * box.height
-            }
-          }
-        }, {
-          // second plate
-          type: "line",
-          params: {
-            start: {
-              x: 0.55 * box.width,
-              y: -0.2 * box.height
-            },
-            end: {
-              x: 0.55 * box.width,
-              y: 1.2 * box.height
-            }
-          }
-        }, {
-          // first pin
-          type: "line",
-          params: {
-            start: {
-              x: 0,
-              y: 0.5 * box.height
-            },
-            end: {
-              x: 0.45 * box.width,
-              y: 0.5 * box.height
-            }
-          }
-        }, {
-          // second pin
-          type: "line",
-          params: {
-            start: {
-              x: 0.55 * box.width,
-              y: 0.5 * box.height
-            },
-            end: {
-              x: box.width,
-              y: 0.5 * box.height
-            }
-          }
-        }],
-        plugs: [
-          {
-            x: box.width,
-            y: 0.5 * box.height
-          }, {
-            x: 0,
-            y: 0.5 * box.height
-          }
-        ]
-      });
-
-    this.addElementToCircuit(capacitor);
   };
 
   DrawElec.prototype.createElement = function (element) {
@@ -265,7 +132,7 @@
 
   DrawElec.prototype.initGrid = function () {
     this.gridEl = document.createElement("canvas");
-    this.gridEl.setAttribute('class', 'drawElec-grid');
+    this.gridEl.setAttribute("class", "drawElec-grid");
     this.gridEl.width = window.innerWidth - 22;
     this.gridEl.height = window.innerHeight - 60;
     this.container.appendChild(this.gridEl);
@@ -297,4 +164,6 @@
       }
     };
   };
-}());
+
+  window.DrawElec = DrawElec;
+}(window, oCanvas));

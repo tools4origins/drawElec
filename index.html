@@ -3,14 +3,15 @@
 <head>
 	<title>Outil de dessin de circuit</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script type="text/javascript" src="js/store.js"></script>
-	<script type="text/javascript" src="js/draw.js"></script>
-	<script type="text/javascript" src="js/ocanvas.js"></script>
 </head>
 <body>
 Dessine moi un circuit :<br />
 <br />
 <div id="drawElec"></div>
+<script type="text/javascript" src="js/lib/ocanvas.js"></script>
+<script type="text/javascript" src="js/basicComponents.js"></script>
+<script type="text/javascript" src="js/store.js"></script>
+<script type="text/javascript" src="js/draw.js"></script>
 <script type="text/javascript">
 	var circuit = new DrawElec("#drawElec");
 </script>
