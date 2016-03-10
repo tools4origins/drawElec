@@ -5,15 +5,14 @@
     };
 
   DrawElec.prototype.init = function () {
-    this.initSizes();
+    this.baseUnit = 20;
+    this.componentAttributes = {
+      fill: "#3ac",
+      stroke: "1px #079"
+    };
     this.initGrid();
     this.initCircuit();
     this.initItems();
-  };
-
-  DrawElec.prototype.initSizes = function () {
-    this.baseUnit = 20;
-    this.components = (new window.BasicComponents(this.baseUnit)).get();
   };
 
   DrawElec.prototype.initCircuit = function () {
@@ -31,6 +30,9 @@
   DrawElec.prototype.initItems = function () {
     this.pinIndicators = [];
 
+    this.components = (new window.BasicComponents(this.baseUnit)).get();
+
+    // Draw a sample circuit
     this.draw("resistor", 4, 3);
     this.draw("capacitor", 4, 4);
     this.draw("resistor", 4, 5);
@@ -102,9 +104,9 @@
 
   DrawElec.prototype.createElement = function (element) {
     var params = element.params;
-    params.fill = params.fill || "#3ac";
-    params.stroke = params.stroke || "1px #079";
-
+    for (var attr in this.componentAttributes) {
+      params[attr] = params[attr] || this.componentAttributes[attr];
+    }
     return this.circuit.display[element.type](params);
   };
 
